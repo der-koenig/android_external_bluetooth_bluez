@@ -54,3 +54,51 @@ AC_DEFUN([MISC_FLAGS], [
 	AC_SUBST([MISC_CFLAGS], $misc_cflags)
 	AC_SUBST([MISC_LDFLAGS], $misc_ldflags)
 ])
+
+AC_DEFUN([AC_FUNC_PPOLL], [
+	AC_CHECK_FUNC(ppoll, dummy=yes, AC_DEFINE(NEED_PPOLL, 1,
+			[Define to 1 if you need the ppoll() function.]))
+])
+
+AC_DEFUN([AC_INIT_BLUEZ], [
+	AC_PREFIX_DEFAULT(/usr/local)
+
+	if (test "${prefix}" = "NONE"); then
+		dnl no prefix and no sysconfdir, so default to /etc
+		if (test "$sysconfdir" = '${prefix}/etc'); then
+			AC_SUBST([sysconfdir], ['/etc'])
+		fi
+
+		dnl no prefix and no localstatedir, so default to /var
+		if (test "$localstatedir" = '${prefix}/var'); then
+			AC_SUBST([localstatedir], ['/var'])
+		fi
+
+		dnl no prefix and no libexecdir, so default to /lib
+		if (test "$libexecdir" = '${exec_prefix}/libexec'); then
+			AC_SUBST([libexecdir], ['/lib'])
+		fi
+
+		dnl no prefix and no mandir, so use ${prefix}/share/man as default
+		if (test "$mandir" = '${prefix}/man'); then
+			AC_SUBST([mandir], ['${prefix}/share/man'])
+		fi
+	])
+	AC_ARG_ENABLE(debug, AC_HELP_STRING([--enable-debug],
+			[enable compiling with debugging information]), [
+		if (test "${enableval}" = "yes" &&
+				test "${ac_cv_prog_cc_g}" = "yes"); then
+			misc_cflags="$misc_cflags -g"
+		fi
+	])
+	AC_ARG_ENABLE(pie, AC_HELP_STRING([--enable-pie],
+			[enable position independent executables flag]), [
+		if (test "${enableval}" = "yes" &&
+				test "${ac_cv_prog_cc_pie}" = "yes"); then
+			misc_cflags="$misc_cflags -fPIC"
+			misc_ldflags="$misc_ldflags -pie"
+		fi
+	])
+	AC_SUBST([MISC_CFLAGS], $misc_cflags)
+	AC_SUBST([MISC_LDFLAGS], $misc_ldflags)
+])

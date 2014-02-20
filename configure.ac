@@ -32,6 +32,7 @@ m4_ifdef([AC_LIBTOOL_TAGS], [AC_LIBTOOL_TAGS([])])
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
+<<<<<<< HEAD
 MISC_FLAGS
 
 AC_ARG_ENABLE(threads, AC_HELP_STRING([--enable-threads],
@@ -45,6 +46,9 @@ AC_CHECK_LIB(rt, clock_gettime, dummy=yes,
 
 AC_CHECK_LIB(pthread, pthread_create, dummy=yes,
 			AC_MSG_ERROR(posix thread support is required))
+=======
+AC_FUNC_PPOLL
+>>>>>>> parent of 3b886d2... build: Remove compat helper for ppoll
 
 AC_CHECK_LIB(dl, dlopen, dummy=yes,
 			AC_MSG_ERROR(dynamic linking loader is required))

@@ -137,8 +137,8 @@ src_bluetoothd_SOURCES = $(builtin_sources) \
 			src/sdp-xml.h src/sdp-xml.c \
 			src/sdp-client.h src/sdp-client.c \
 			src/textfile.h src/textfile.c \
-			src/uuid-helper.h src/uuid-helper.c \
-			src/uinput.h \
+			src/glib-helper.h src/glib-helper.c \
+			src/uinput.h src/ppoll.h \
 			src/plugin.h src/plugin.c \
 			src/storage.h src/storage.c \
 			src/agent.h src/agent.c \

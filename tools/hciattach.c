@@ -1043,6 +1043,39 @@ static int bcm2035(int fd, struct uart_t *u, struct termios *ti)
 	return 0;
 }
 
+static int qcom_uart_init(int fd, struct uart_t *u, struct termios *ti)
+{
+	int flags = 0;
+
+	if (ioctl(fd, TIOCMGET, &flags) < 0){
+		perror("TIOCMGET failed in init \n");
+		return -1;
+	}
+	flags &= ~TIOCM_RTS;
+	if (ioctl(fd, TIOCMSET, &flags) < 0){
+		perror("TIOCMSET failed in init: HW Flow-off error  \n");
+		return -1;
+	}
+
+	return 0;
+}
+
+static int qcom_uart_post(int fd, struct uart_t *u, struct termios *ti)
+{
+	int flags = 0;
+
+	if (ioctl(fd, TIOCMGET, &flags) < 0){
+		perror("TIOCMGET failed in post \n");
+		return -1;
+	}
+	flags &= ~TIOCM_RTS;
+	if (ioctl(fd, TIOCMSET, &flags) < 0){
+		perror("TIOCMSET failed in post: HW Flow-on error \n");
+		return -1;
+	}
+	return 0;
+}
+
 struct uart_t uart[] = {
 	{ "any",        0x0000, 0x0000, HCI_UART_H4,   115200, 115200,
 				FLOW_CTL, DISABLE_PM, NULL, NULL     },
@@ -1145,6 +1178,10 @@ struct uart_t uart[] = {
 	/* QUALCOMM BTS */
 	{ "qualcomm",   0x0000, 0x0000, HCI_UART_H4,   115200, 115200,
 			FLOW_CTL, DISABLE_PM, NULL, qualcomm, NULL },
+
+	/* QUALCOMM IBS */
+	{ "qualcomm-ibs",   0x0000, 0x0000, HCI_UART_IBS,   115200, 115200,
+			FLOW_CTL, DISABLE_PM, NULL, qcom_uart_init, qcom_uart_post },
 
 	/* Intel Bluetooth Module */
 	{ "intel",      0x0000, 0x0000, HCI_UART_H4,   115200, 115200,

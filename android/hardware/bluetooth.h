@@ -83,7 +83,8 @@ typedef enum {
     BT_STATUS_PARM_INVALID,
     BT_STATUS_UNHANDLED,
     BT_STATUS_AUTH_FAILURE,
-    BT_STATUS_RMT_DEV_DOWN
+    BT_STATUS_RMT_DEV_DOWN,
+    BT_STATUS_AUTH_REJECTED
 
 } bt_status_t;
 
@@ -200,7 +201,14 @@ typedef enum {
      * Data type   - int32_t.
      */
     BT_PROPERTY_REMOTE_RSSI,
-    /**
+
+   /**
+    * Description - Trust value of the remote device
+    * Access mode - GET and SET
+    * Data type   - boolean.
+    */
+    BT_PROPERTY_REMOTE_TRUST_VALUE,
+   /**
      * Description - Remote version info
      * Access mode - SET/GET.
      * Data type   - bt_remote_version_t.
@@ -280,7 +288,7 @@ typedef void (*discovery_state_changed_callback)(bt_discovery_state_t state);
 
 /** Bluetooth Legacy PinKey Request callback */
 typedef void (*pin_request_callback)(bt_bdaddr_t *remote_bd_addr,
-                                        bt_bdname_t *bd_name, uint32_t cod);
+                                        bt_bdname_t *bd_name, uint32_t cod, uint8_t secure);
 
 /** Bluetooth SSP Request callback - Just Works & Numeric Comparison*/
 /** pass_key - Shall be 0 for BT_SSP_PAIRING_VARIANT_CONSENT &
@@ -370,6 +378,9 @@ typedef struct {
      * to the implemenation of this interface.
      */
     int (*init)(bt_callbacks_t* callbacks );
+
+    /*adds callbacks for QC related calls to the btif env*/
+    int (*initq)(bt_callbacks_t* callbacks);
 
     /** Enable Bluetooth. */
     int (*enable)(void);

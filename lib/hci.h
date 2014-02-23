@@ -34,7 +34,7 @@ extern "C" {
 
 #define HCI_MAX_DEV	16
 
-#define HCI_MAX_ACL_SIZE	(1492 + 4)
+#define HCI_MAX_ACL_SIZE	1500
 #define HCI_MAX_SCO_SIZE	255
 #define HCI_MAX_EVENT_SIZE	260
 #define HCI_MAX_FRAME_SIZE	(HCI_MAX_ACL_SIZE + 4)
@@ -92,6 +92,7 @@ enum {
 #define HCIGETCONNLIST	_IOR('H', 212, int)
 #define HCIGETCONNINFO	_IOR('H', 213, int)
 #define HCIGETAUTHINFO	_IOR('H', 215, int)
+#define HCISETAUTHINFO	_IOR('H', 216, int)
 
 #define HCISETRAW	_IOW('H', 220, int)
 #define HCISETSCAN	_IOW('H', 221, int)
@@ -145,6 +146,23 @@ enum {
 
 #define SCO_PTYPE_MASK	(HCI_HV1 | HCI_HV2 | HCI_HV3)
 #define ACL_PTYPE_MASK	(HCI_DM1 | HCI_DH1 | HCI_DM3 | HCI_DH3 | HCI_DM5 | HCI_DH5)
+
+/* eSCO packet types */
+#define ESCO_HV1	0x0001
+#define ESCO_HV2	0x0002
+#define ESCO_HV3	0x0004
+#define ESCO_EV3	0x0008
+#define ESCO_EV4	0x0010
+#define ESCO_EV5	0x0020
+#define ESCO_2EV3	0x0040
+#define ESCO_3EV3	0x0080
+#define ESCO_2EV5	0x0100
+#define ESCO_3EV5	0x0200
+
+#define SCO_ESCO_MASK	(ESCO_HV1 | ESCO_HV2 | ESCO_HV3)
+#define EDR_ESCO_MASK	(ESCO_2EV3 | ESCO_3EV3 | ESCO_2EV5 | ESCO_3EV5)
+#define ALL_ESCO_MASK	(SCO_ESCO_MASK | ESCO_EV3 | ESCO_EV4 | ESCO_EV5 | \
+				EDR_ESCO_MASK)
 
 /* HCI Error codes */
 #define HCI_UNKNOWN_COMMAND			0x01
@@ -1357,7 +1375,7 @@ typedef struct {
 	uint8_t		status;
 	uint16_t	handle;
 } __attribute__ ((packed)) reset_failed_contact_counter_rp;
-#define RESET_FAILED_CONTACT_COUNTER_RP_SIZE 3
+#define RESET_FAILED_CONTACT_COUNTER_RP_SIZE 4
 
 #define OCF_READ_LINK_QUALITY		0x0003
 typedef struct {
@@ -1508,7 +1526,7 @@ typedef struct {
 #define OCF_LE_READ_ADVERTISING_CHANNEL_TX_POWER	0x0007
 typedef struct {
 	uint8_t		status;
-	int8_t		level;
+	uint8_t		level;
 } __attribute__ ((packed)) le_read_advertising_channel_tx_power_rp;
 #define LE_READ_ADVERTISING_CHANNEL_TX_POWER_RP_SIZE 2
 
@@ -1732,7 +1750,7 @@ typedef struct {
 	uint8_t		link_type;
 	uint8_t		encr_mode;
 } __attribute__ ((packed)) evt_conn_complete;
-#define EVT_CONN_COMPLETE_SIZE 11
+#define EVT_CONN_COMPLETE_SIZE 13
 
 #define EVT_CONN_REQUEST		0x04
 typedef struct {
@@ -1771,7 +1789,7 @@ typedef struct {
 	uint16_t	handle;
 	uint8_t		encrypt;
 } __attribute__ ((packed)) evt_encrypt_change;
-#define EVT_ENCRYPT_CHANGE_SIZE 4
+#define EVT_ENCRYPT_CHANGE_SIZE 5
 
 #define EVT_CHANGE_CONN_LINK_KEY_COMPLETE	0x09
 typedef struct {
@@ -2369,10 +2387,15 @@ struct hci_dev_info {
 struct hci_conn_info {
 	uint16_t handle;
 	bdaddr_t bdaddr;
-	uint8_t  type;
+	uint8_t	 type;
 	uint8_t	 out;
 	uint16_t state;
 	uint32_t link_mode;
+	uint32_t mtu;
+	uint32_t cnt;
+	uint32_t pkts;
+	uint8_t pending_sec_level;
+	uint8_t ssp_mode;
 };
 
 struct hci_dev_req {

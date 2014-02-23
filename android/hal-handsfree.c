@@ -223,6 +223,12 @@ static bt_status_t init(bthf_callbacks_t *callbacks)
 	return ret;
 }
 
+static bt_status_t init_features(int feature_bitmask)
+{
+	DBG("Calling init_features");
+	return BT_STATUS_SUCCESS;
+}
+
 static bt_status_t handsfree_connect(bt_bdaddr_t *bd_addr)
 {
 	struct hal_cmd_handsfree_connect cmd;

@@ -31,6 +31,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <cutils/properties.h>
 
 #include <glib.h>
 
@@ -1950,7 +1951,25 @@ static void read_info_complete(uint8_t status, uint16_t length,
 
 	if (!bacmp(&adapter.bdaddr, BDADDR_ANY)) {
 		bacpy(&adapter.bdaddr, &rp->bdaddr);
-		adapter.name = g_strdup(DEFAULT_ADAPTER_NAME);
+
+		char adapter_name[PROPERTY_VALUE_MAX];
+		char brand[PROPERTY_VALUE_MAX];
+		char model[PROPERTY_VALUE_MAX];
+		
+		property_get("ro.product.model", model, "");
+		
+		if (strlen(model)) {
+			property_get("ro.product.brand", brand, "");
+			if (strlen(brand)) {
+				snprintf(adapter_name, PROPERTY_VALUE_MAX, "%s %s", brand, model);
+				adapter.name = g_strdup(adapter_name);
+			} else {
+				adapter.name = g_strdup(model);
+			}
+		} else {
+			adapter.name = g_strdup(DEFAULT_ADAPTER_NAME);
+		}
+
 		store_adapter_config();
 	} else if (bacmp(&adapter.bdaddr, &rp->bdaddr)) {
 		error("Bluetooth address mismatch");

@@ -74,6 +74,7 @@ LOCAL_CFLAGS := $(BLUEZ_COMMON_CFLAGS)
 
 LOCAL_SHARED_LIBRARIES := \
 	libglib \
+	libcutils \
 
 lib_headers := \
 	bluetooth.h \

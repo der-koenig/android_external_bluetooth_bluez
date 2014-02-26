@@ -225,7 +225,7 @@ static bt_status_t init(bthf_callbacks_t *callbacks)
 
 static bt_status_t init_features(int feature_bitmask)
 {
-	DBG("Calling init_features");
+	DBG("init_features being called, not implemented.");
 	return BT_STATUS_SUCCESS;
 }
 
@@ -581,6 +581,7 @@ static void cleanup(void)
 static bthf_interface_t iface = {
 	.size = sizeof(iface),
 	.init = init,
+	.init_features = init_features,
 	.connect = handsfree_connect,
 	.disconnect = disconnect,
 	.connect_audio = connect_audio,

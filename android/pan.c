@@ -57,9 +57,9 @@
 
 #define SVC_HINT_NETWORKING 0x02
 
-#define BNEP_BRIDGE "bt-pan"
-#define BNEP_PANU_INTERFACE "bt-pan"
-#define BNEP_NAP_INTERFACE "bt-pan%d"
+#define BNEP_BRIDGE "bnep"
+#define BNEP_PANU_INTERFACE "bnep"
+#define BNEP_NAP_INTERFACE "bnep%d"
 
 static bdaddr_t adapter_addr;
 GSList *devices = NULL;

@@ -105,6 +105,7 @@ LOCAL_C_INCLUDES:=\
 	$(LOCAL_PATH)/bluez/src \
 	$(LOCAL_PATH)/bluez/src/shared \
 
+LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE:=hciattach
 
 include $(BUILD_EXECUTABLE)
